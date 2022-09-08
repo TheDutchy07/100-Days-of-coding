@@ -1,0 +1,35 @@
+logo = '''
+                         ___________
+                         \         /
+                          )_______(
+                          |"""""""|_.-._,.---------.,_.-._
+                          |       | | |               | | ''-.
+                          |       |_| |_             _| |_..-'
+                          |_______| '-' `'---------'` '-'
+                          )"""""""(
+                         /_________\\
+                       .-------------.
+                      /_______________\\
+'''
+import os
+clear = lambda: os.system('cls')
+clear()
+print(logo)
+print("Welcome to the blind auction!!")
+more_bidders = "yes"
+auction = {}
+
+def blind_auction (name, bid):
+    auction[name] = bid
+
+while more_bidders == "yes":
+    name = input("What is your name?  ")
+    bid = input(f"What would you like to bid, {name}? $")
+    more_bidders = input("Are there any other bidders? yes or no...")
+    if more_bidders == "yes":
+        clear()
+        print(logo)
+    blind_auction(name, bid)
+
+winner = (max(auction))
+print(f"The winner is {winner}, with a bid of ${auction[winner]}!")
