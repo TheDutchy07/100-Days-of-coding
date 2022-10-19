@@ -1,0 +1,115 @@
+
+MENU = {
+    "espresso": {
+        "ingredients": {
+            "water": 50,
+            "coffee": 18,
+        },
+        "cost": 1.5,
+    },
+    "latte": {
+        "ingredients": {
+            "water": 200,
+            "milk": 150,
+            "coffee": 24,
+        },
+        "cost": 2.5,
+    },
+    "cappuccino": {
+        "ingredients": {
+            "water": 250,
+            "milk": 100,
+            "coffee": 24,
+        },
+        "cost": 3.0,
+    }
+}
+
+resources = {
+    "water": 300,
+    "milk": 200,
+    "coffee": 100,
+    "money": 0
+}
+
+
+def money():
+    quarters_count = float(input("How many quarters?:"))
+    dimes_count = float(input("How many dimes?:"))
+    nickles_count = float(input("How many nickles?:"))
+    pennies_count = float(input("How many pennies?:"))
+    q = quarters_count * 0.25
+    d = dimes_count * 0.1
+    n = nickles_count * 0.05
+    p = pennies_count * 0.01
+    return q + d + n + p
+
+
+def coffee_machine(uc):
+    if uc == "espresso":
+        resources["water"] -= MENU[uc]["ingredients"]["water"]
+        resources["coffee"] -= MENU[uc]["ingredients"]["coffee"]
+    elif uc == "latte":
+        resources["water"] -= MENU[uc]["ingredients"]["water"]
+        resources["milk"] -= MENU[uc]["ingredients"]["milk"]
+        resources["coffee"] -= MENU[uc]["ingredients"]["coffee"]
+    elif uc == "cappuccino":
+        resources["water"] -= MENU[uc]["ingredients"]["water"]
+        resources["milk"] -= MENU[uc]["ingredients"]["milk"]
+        resources["coffee"] -= MENU[uc]["ingredients"]["coffee"]
+
+
+def transaction(uchoice, upayment):
+    drink_price = MENU[uchoice]["cost"]
+    drink_payment = upayment
+    change = round((drink_payment - drink_price), 2)
+    if change < 0:
+        print(f"Sorry, not enough money, the drink costs ${drink_price}, you only gave ${drink_payment}, "
+              f"you are short ${change}")
+    else:
+        resources["money"] += MENU[uchoice]["cost"]
+        print(f"Thank you for your payment, here is your {uchoice} and change of ${change}")
+
+
+def stock_check():
+    global oos_item
+    if resources["water"] <= 0:
+        oos_item = "water"
+        return False
+    elif resources["milk"] <= 0:
+        oos_item = "milk"
+        return False
+    elif resources["coffee"] <= 0:
+        oos_item = "coffee"
+        return False
+    else:
+        return True
+
+
+order = True
+oos_item = ''
+
+
+while order:
+    if stock_check():
+        user_choice = input("What would you like? (espresso/latte/cappuccino): ")
+        if user_choice == "report":
+            print(f'{resources["water"]}ml')
+            print(f'{resources["milk"]}ml')
+            print(f'{resources["coffee"]}g')
+            print(f'${resources["money"]}')
+            order = False
+        elif user_choice == "off":
+            print("Thank you, have a nice day")
+            order = False
+        else:
+            print("Please insert coins:")
+            coins_total = money()
+            coffee_machine(user_choice)
+            transaction(user_choice, coins_total)
+            next_order = input("Would you like another drink? Y or N...").upper()
+            if next_order == "N":
+                order = False
+    else:
+        print(f"Sorry, not enough {oos_item}...come back later")
+        order = False
